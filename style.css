@@ -1,0 +1,47 @@
+body{
+    background-color: #706d7b;
+}
+
+#header{
+    border-bottom: 1px solid #fff;
+    margin: .5rem 0px;
+}
+
+.container{
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+form{
+    margin: 0 auto;
+    width: 500px;
+    border: 2px solid #333;
+    padding: 2rem 1rem;
+    background-color: #fff;;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.text-light{
+    color: #fff;
+}
+
+.text-light a{
+    color: #aaff9e;
+}
+
+.form-group{
+    margin-bottom: .5rem;
+}
+
+
+.btn{
+    width: 100%;
+    font-size: 20px;
+    padding: .25rem;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+}
