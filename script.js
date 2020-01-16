@@ -1,6 +1,3 @@
-
-let myLibrary = [];
-
 function Book(title, author, pages, read){
     this.title = title
     this.author = author
@@ -8,57 +5,64 @@ function Book(title, author, pages, read){
     this.read = read
 }
 
-// on click
-let submitButton = document.getElementById('add-book');
-submitButton.addEventListener('click', addBookToLibrary );
-
-
-function isDupe( title, author ){
-    let dupe = false
-    myLibrary.forEach( function( book )  {
-        if ( book.title == title && book.author == author ){
-            dupe = true
-        }
-    } )
-    return dupe
-}
-
-
-function addBookToLibrary( e ){
-    // display error on duplicate book/author
+var library = {
+    //declarations
+    collection: [],
+    submitButton: document.getElementById('add-book'),
+    inputs: document.getElementsByTagName('input'),
     
-    params = buildParams(e)
+    //construct
+    init: function() {
+        this.submitButton.addEventListener('click', this.addBook );
+
+    },
+
+    // binded to click => #add-book
+    addBook: function(e){
+        // display error on duplicate book/author
     
-    book = new Book( params['title'], params['author'], params['pages'],
-    params['read'])
-    
-    // search for duplicates
-    if( ! isDupe( params['title'], params['author'] ) ){
-        // add to library
-        myLibrary.push(book)
-        clearInputs();
-    }
-    
-
-}
-
-function buildParams( e ) {
-    // e = #add-book
-    // returns formdata in key:value pairs
-    let form =  e.target.parentElement
-    let inputs = document.getElementsByTagName('input');
-
-    let params = [];
-
-    for (let input of inputs) {
-        if( input.name !== "" && input.value !== "" ){
-            params[input.name] = input.value
+        params = library.buildParams(e)
+        
+        book = new Book( params['title'], params['author'], 
+                        params['pages'], params['read'])
+        
+        // search for duplicates
+        if( ! library.isDupe( params['title'], params['author'] ) ){
+            // add to library
+            library.collection.push(book)
         }
 
-    }
+        console.log( library.collection )
+    },
 
-    return params
+    buildParams: function( e ) {
+        // e = #add-book
+        // returns formdata in key:value pairs
+    
+        let params = [];
+    
+        for (let input of this.inputs) {
+            if( input.name !== "" && input.value !== "" ){
+                params[input.name] = input.value
+            }
+    
+        }
+    
+        return params
+    },
+
+    isDupe: function( title, author ){
+        let dupe = false
+        this.collection.forEach( function( book )  {
+            if ( book.title == title && book.author == author ){
+                dupe = true
+            }
+        } )
+        return dupe
+    }
 }
+
+library.init();
 
 
 
