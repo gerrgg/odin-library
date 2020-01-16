@@ -1,25 +1,49 @@
 function Book(title, author, pages, read){
-    this.title = title
+    this.title = title    
     this.author = author
     this.pages = pages
     this.read = read
 }
 
+const book1 = new Book( 'The Hunger Games', 'Suzanne Collins', 333, 'off' )
+const book2 = new Book( 'Harry Potter and the Sorcerer\'s Stone', ' J.K. Rowling', 150, 'on' )
+
 var library = {
     //declarations
-    collection: [],
+    collection: [book1, book2],
     errors: [],
 
     // dom elements
     shelf: document.getElementById('my-library'),
-    errors: document.getElementById('errors'),
+    errorDiv: document.getElementById('errors'),
     submitButton: document.getElementById('add-book'),
     inputs: document.getElementsByTagName('input'),
     
     //construct
     init: function() {
-        this.shelf.render( this.collection )
+        this.render()
         this.submitButton.addEventListener('click', this.addBook );
+    },
+
+    render: function(){
+        
+        //clear shelf
+        let html = ''
+        this.shelf.innerHTML = html;
+        
+        // display each book in collection
+        this.collection.forEach( function( book ) {
+            let read = ( book.read === 'on' ) ? 'Yes' : 'No' 
+
+            html += `<div class='book'>
+                        <p class="title">Title: ${book.title}</p>
+                        <p class="author">Author: ${book.author}</p>
+                        <p class="pages">Total Pages: ${book.pages}</p>
+                        <p class="read">Did you read it?: ${read}</p>
+                    </div>`
+        } );
+
+        this.shelf.innerHTML = html;
     },
 
     // binded to click => #add-book
@@ -30,16 +54,48 @@ var library = {
         
         book = new Book( params['title'], params['author'], 
                         params['pages'], params['read'])
-        
+
+
         // search for duplicates
-        if( ! library.isDupe( params['title'], params['author'] ) ){
+        if( ! library.isDupe( params['title'], params['author'] ) && library.isValid( book ) ){
             // add to library
             library.collection.push(book)
-            library.clearFields();
-        } else {
-            library.showErrors();
+            library.clearFields()
+            library.render()
+        } 
+        
+        library.showErrors()
+
+    },
+
+    isValid: function( book ){
+        let valid = true
+
+        Object.keys(book).forEach(function(key) {
+            if( book[key] == null ){
+                valid = false
+            }
+        });
+
+        console.log( valid )
+        if( ! valid ){
+            this.errors.push( 'Inputs cannot be blank!' )
         }
 
+        return valid
+    },
+
+    showErrors: function(){
+         //clear error
+         let html = ''
+         this.errorDiv.innerHTML = html
+         
+         // display each book in collection
+         this.errors.forEach( function( error ) {
+             html += "<li>"+ error +"</li>";
+         } );
+ 
+         this.errorDiv.innerHTML = html
     },
 
     buildParams: function( ) {
@@ -57,21 +113,28 @@ var library = {
     },
 
     clearFields: function( ){
-
+        // simply clears the value of form inputs on successful 'submission'
         for (let input of this.inputs) {
             input.value = ''
         }
+
+        library.errorDiv.innerHTML = '';
     },
+    
 
     isDupe: function( title, author ){
         let dupe = false
-        this.collection.forEach( function( book )  {
+
+        this.collection.forEach( function( book ) {
             if ( book.title == title && book.author == author ){
                 dupe = true
-            } else {
-                this.errors.push( params['title'] + ' by ' + params['author'] + 'is already on your shelf.' )
             }
-        } )
+        } );
+        
+        if( dupe ){
+            library.errors.push( params['title'] + ' by ' + params['author'] + 'is already on your shelf.' )
+        }
+
         return dupe
     },
 

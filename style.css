@@ -45,3 +45,20 @@ body{
     color: #fff;
     cursor: pointer;
 }
+
+.library{
+    display: flex;
+}
+
+.library > .book{
+    border: 1px dotted #333;
+    background-color: #fff;
+    color: #333;
+    padding: .5rem 1rem;
+    margin: .25rem;
+    width: 30%;
+}
+
+.title{
+    font-weight: 600;
+}
